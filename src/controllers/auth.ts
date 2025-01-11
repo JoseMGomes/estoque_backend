@@ -41,10 +41,10 @@ export const login = async (req: Request, res: Response) => {
 
   let user = await prismaClient.user.findFirst({ where: { email } });
   if (!user) {
-    throw new NotFoundException('User not found.', ErrorCode.USER_NOT_FOUND)
+    throw new NotFoundException('User not found.', ErrorCode.NOT_FOUND)
   }
   if (!compareSync(password, user.password)) {
-    throw new BadRequestException('Incorrect password', ErrorCode.INCORRECT_PASSWORD)
+    throw new BadRequestException('Incorrect password', ErrorCode.BAD_REQUEST)
   }
 
   const token = jwt.sign(
@@ -55,3 +55,7 @@ export const login = async (req: Request, res: Response) => {
   );
   res.json({ user, token });
 };
+
+export const me = async (req: Request, res:Response)=>{
+  res.json(req.body.user)
+}
