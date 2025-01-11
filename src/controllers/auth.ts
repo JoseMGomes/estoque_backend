@@ -23,7 +23,7 @@ export const signup = async (
     
       new BadRequestException(
         "User already exists!",
-        ErrorCode.USER_ALREADY_EXISTS
+        ErrorCode.ALREADY_EXISTS
       )
   }
   user = await prismaClient.user.create({
