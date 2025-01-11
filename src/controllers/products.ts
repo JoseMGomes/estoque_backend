@@ -44,3 +44,34 @@ export const createProduct = async (
     next(error);
   }
 };
+
+export const deleteProduct = async (
+  req: Request,
+  res: Response,
+  next: NextFunction
+): Promise<void> => {
+  try {
+    const { id } = req.params;
+    const existingProduct = await prismaClient.product.findUnique({
+      where: { id: Number(id) },
+    });
+
+    if (!existingProduct) {
+      throw new BadRequestException(
+        "Product not found.",
+        ErrorCode.NOT_FOUND
+      );
+    }
+
+    
+    await prismaClient.product.delete({
+      where: { id: Number(id) },
+    });
+
+    res.status(200).json({ message: "successfully deleted." });
+  } catch (error) {
+    next(error);
+  }
+};
+
+

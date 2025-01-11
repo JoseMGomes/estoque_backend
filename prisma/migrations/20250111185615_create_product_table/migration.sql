@@ -10,7 +10,7 @@ CREATE TABLE [products] (
     [name] NVARCHAR(191) NOT NULL,
     [description] NVARCHAR(191) NOT NULL,
     [price] DECIMAL(65, 30) NOT NULL,
-    [image] NVARCHAR(MAX) NOT NULL, 
+    [image] NVARCHAR(MAX) NOT NULL,
     [createdAt] DATETIME NOT NULL DEFAULT GETDATE(),
     [updatedAt] DATETIME NOT NULL DEFAULT GETDATE(),
 
