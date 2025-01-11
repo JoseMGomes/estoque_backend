@@ -75,3 +75,20 @@ export const deleteProduct = async (
 };
 
 
+export const listProduct = async (
+  req: Request,
+  res: Response,
+  next: NextFunction
+): Promise<void> => {
+  try {
+    
+    const products = await prismaClient.product.findMany();
+
+    
+    res.status(200).json(products);
+  } catch (error) {
+    next(error); 
+  }
+};
+
+
