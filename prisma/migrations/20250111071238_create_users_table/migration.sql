@@ -1,12 +1,11 @@
 -- CreateTable
-CREATE TABLE `users` (
-    `id` INTEGER NOT NULL AUTO_INCREMENT,
-    `name` VARCHAR(191) NOT NULL,
-    `email` VARCHAR(191) NOT NULL,
-    `password` VARCHAR(191) NOT NULL,
-    `createdAt` DATETIME(3) NOT NULL DEFAULT CURRENT_TIMESTAMP(3),
-    `updatedAt` DATETIME(3) NOT NULL,
+CREATE TABLE [users] (
+    [id] INT IDENTITY(1,1) PRIMARY KEY, 
+    [name] NVARCHAR(191) NOT NULL,
+    [email] NVARCHAR(191) NOT NULL,
+    [password] NVARCHAR(191) NOT NULL,
+    [createdAt] DATETIME NOT NULL DEFAULT GETDATE(),
+    [updatedAt] DATETIME NOT NULL DEFAULT GETDATE(),
 
-    UNIQUE INDEX `users_email_key`(`email`),
-    PRIMARY KEY (`id`)
-) DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
+    CONSTRAINT [users_email_key] UNIQUE ([email])
+);
