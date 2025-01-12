@@ -41,8 +41,19 @@ export class ProductService {
   }
 
   async listProduct() {
-    return await this.productRepository.list();
+    const listProduct = await this.productRepository.list();
+    
+    const productsWithBase64Image = listProduct.map(item => {
+      if (item.image) {
+        const base64Image = Buffer.from(item.image).toString('base64');
+        return { ...item, image: `data:image/jpeg;base64,${base64Image}` }; 
+      }
+      return item;
+    });
+  
+    return productsWithBase64Image;
   }
+  
 
   async getProductById(id: number) {
     const product = await this.productRepository.getById(id);
@@ -50,7 +61,10 @@ export class ProductService {
     if (!product) {
       throw new ErrorResponse(ErrorMessageProduct.NOT_FOUND, ErrorCode.NOT_FOUND);
     }
-
+    if (product.image) {
+      const base64Image = Buffer.from(product.image).toString('base64');
+      return { ...product, image: `data:image/jpeg;base64,${base64Image}` }; 
+    }
     return product;
   }
 
