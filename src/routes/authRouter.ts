@@ -1,12 +1,11 @@
 import { Router } from "express";
-import { login, me, signup } from "../controllers/authController";
-import { errorHandler } from "../error-handler";
-import authMiddleware from "../middlewares/authMiddlewares";
+import { login, validToken, signup } from "../controllers/userController";
 
-const authRoutes: Router = Router();
 
-authRoutes.post("/signup", errorHandler(signup));
-authRoutes.post("/login", errorHandler(login));
-authRoutes.get("/me", [authMiddleware], errorHandler(me));
+const authRoutes: any = Router();
+
+authRoutes.post("/signup", signup);
+authRoutes.post("/login", login);
+authRoutes.get("/me", validToken);
 
 export default authRoutes;

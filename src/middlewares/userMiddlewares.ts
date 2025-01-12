@@ -1,9 +1,10 @@
 import { NextFunction, Request, Response } from "express";
-import { UnauthorizedException } from "../exceptions/unauthorized";
-import { ErrorCode } from "../exceptions/root";
+
 import * as jwt from "jsonwebtoken";
 import { JWT_SECRET } from "../secrets";
 import { prismaClient } from "..";
+import { ErrorResponse } from "../exceptions/errorResponse";
+import { ErrorCode } from "../constants/errorCode";
 
 const authMiddleware = async (
   req: Request,
@@ -12,10 +13,7 @@ const authMiddleware = async (
 ) => {
   const token = req.headers.authorization;
   if (!token) {
-    next(
-      new UnauthorizedException("Token não fornecido", ErrorCode.UNAUTHORIZED)
-    );
-    return;
+      throw new ErrorResponse("Token não fornecido", ErrorCode.UNAUTHORIZED)
   }
 
   try {
@@ -24,18 +22,18 @@ const authMiddleware = async (
       where: { id: payload.userId },
     });
     if (!user) {
-      next(
-        new UnauthorizedException(
+      
+       throw new ErrorResponse(
           "Usuário não encontrado",
           ErrorCode.UNAUTHORIZED
-        )
+        
       );
-      return;
+      
     }
     req.body.user = user;
     next();
   } catch (error) {
-    next(new UnauthorizedException("Token inválido", ErrorCode.UNAUTHORIZED));
+    throw new ErrorResponse("Token inválido", ErrorCode.UNAUTHORIZED);
   }
 };
 
