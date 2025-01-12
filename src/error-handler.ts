@@ -2,7 +2,6 @@ import { Request, Response, NextFunction, RequestHandler } from "express";
 import { ErrorCode, HttpExceptions } from "./exceptions/root";
 import { InternalException } from "./exceptions/internal-exception";
 
-// Alterando o tipo para RequestHandler
 export const errorHandler = (method: RequestHandler): RequestHandler => {
   return async (req: Request, res: Response, next: NextFunction) => {
     try {
@@ -12,7 +11,11 @@ export const errorHandler = (method: RequestHandler): RequestHandler => {
       if (error instanceof HttpExceptions) {
         exception = error;
       } else {
-        exception = new InternalException("Something went wrong!", error, ErrorCode.INTERNAL_EXCEPTION);
+        exception = new InternalException(
+          "Something went wrong!",
+          error,
+          ErrorCode.INTERNAL_EXCEPTION
+        );
       }
       next(exception);
     }
