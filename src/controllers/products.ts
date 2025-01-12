@@ -10,33 +10,24 @@ export const createProduct = async (
   next: NextFunction
 ): Promise<void> => {
   try {
-    CreateProductSchema.parse(req.body);
+    const { name, description, price, quantity, image } =
+      CreateProductSchema.parse(req.body);
 
-    const { name, description, price, image, quantity } = req.body;
+    const imageBuffer: Uint8Array = image
+      ? new Uint8Array(Buffer.from(image.split(",")[1], "base64"))
+      : new Uint8Array();
 
-    //
-    let existingProduct = await prismaClient.product.findUnique({
-      where: { name },
-    });
-
-    if (existingProduct) {
-      throw new BadRequestException(
-        "Product with the same name already exists.",
-        ErrorCode.ALREADY_EXISTS
-      );
-    }
-
-    const product = await prismaClient.product.create({
+    const newProduct = await prismaClient.product.create({
       data: {
         name,
         description,
         price,
-        image,
         quantity,
+        image: imageBuffer,
       },
     });
 
-    res.json({ product });
+    res.status(201).json(newProduct);
   } catch (error) {
     next(error);
   }
@@ -149,15 +140,14 @@ export const updateProductQuantity = async (
   }
 };
 
-
-export const updateProduct = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
+export const updateProduct = async (
+  req: Request,
+  res: Response,
+  next: NextFunction
+): Promise<void> => {
   try {
     const { id } = req.params;
-    const { name, description, price, image, quantity } = req.body;
-
-    if (!name || !description || price === undefined || !image || quantity === undefined) {
-      throw new BadRequestException("Missing required fields", ErrorCode.BAD_REQUEST);
-    }
+    const { name, description, price, quantity, image } = req.body;
 
     const existingProduct = await prismaClient.product.findUnique({
       where: { id: Number(id) },
@@ -167,14 +157,20 @@ export const updateProduct = async (req: Request, res: Response, next: NextFunct
       throw new BadRequestException("Product not found", ErrorCode.NOT_FOUND);
     }
 
+    let imageBuffer = existingProduct.image;
+    if (image) {
+      const base64Image = image.split(",")[1];
+      imageBuffer = Buffer.from(base64Image, "base64");
+    }
+
     const updatedProduct = await prismaClient.product.update({
       where: { id: Number(id) },
       data: {
-        name,
-        description,
-        price,
-        image,
-        quantity,
+        name: name || existingProduct.name,
+        description: description || existingProduct.description,
+        price: price || existingProduct.price,
+        quantity: quantity !== undefined ? quantity : existingProduct.quantity,
+        image: imageBuffer,
       },
     });
 
@@ -183,5 +179,3 @@ export const updateProduct = async (req: Request, res: Response, next: NextFunct
     next(error);
   }
 };
-
-
