@@ -16,4 +16,5 @@ export enum ErrorMessage {
   INVALID_CREDENTIALS = "Credenciais inválidas.",
   FORBIDDEN = "Acesso proibido.",
   MISSING_FIELDS = "Campos obrigatórios estão faltando.",
+  INVALID_TOKEN = "Token Invalido"
 }

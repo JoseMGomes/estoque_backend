@@ -1,7 +1,6 @@
 import { PrismaClient } from "@prisma/client";
 import express, { Express, Request, Response } from "express";
 import rootRouter from "./routes";
-import { PORT } from "./secrets";
 import cors from "cors"; 
 
 const app: Express = express();
@@ -21,6 +20,6 @@ export const prismaClient = new PrismaClient({
 });
 
 
-app.listen(PORT, () => {
+app.listen(3000, () => {
   console.log("App Funcionando!");
 });

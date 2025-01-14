@@ -5,3 +5,14 @@ export const SignUpSchema = z.object({
   email: z.string().email(),
   password: z.string().min(6),
 });
+
+
+export const LoginSchema = z.object({
+  email: z.string().email(),
+  password: z.string().min(6),
+});
+
+export const TokenUserSchema = z.object({
+  id: z.number(),
+  email: z.string().email(),
+});

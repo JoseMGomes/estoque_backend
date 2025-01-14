@@ -1,5 +1,4 @@
 import { ProductRepository } from "../repository/productRepository";
-import { CreateProductSchema } from "../schema/productSchema";
 import { ErrorResponse } from "../exceptions/errorResponse";
 import { ErrorCode } from "../constants/errorCode";
 import { ErrorMessageProduct } from "../constants/errorMessage";
@@ -12,8 +11,7 @@ export class ProductService {
   }
 
   async createProduct(productData: any) {
-    const { name, description, price, quantity, image } =
-      CreateProductSchema.parse(productData);
+    const { name, description, price, quantity, image } = productData;
 
     const imageBuffer: Uint8Array = image
       ? new Uint8Array(Buffer.from(image.split(",")[1], "base64"))
@@ -53,7 +51,6 @@ export class ProductService {
   
     return productsWithBase64Image;
   }
-  
 
   async getProductById(id: number) {
     const product = await this.productRepository.getById(id);
@@ -71,16 +68,18 @@ export class ProductService {
   async updateProductQuantity(id: number, body: any) {
     const { quantity, updateQuantity } = body;
     const existingProduct = await this.productRepository.getById(id);
+    let stock = false
 
     if (!existingProduct) {
       throw new ErrorResponse(ErrorMessageProduct.NOT_FOUND, ErrorCode.NOT_FOUND);
     }
 
     let updatedQuantity = existingProduct.quantity;
-
+    console.log(body)
     if (quantity !== undefined) {
       if (updateQuantity === "add") {
         updatedQuantity += quantity;
+        stock = true
       } else if (updateQuantity === "remove") {
         if (quantity > existingProduct.quantity) {
           throw new ErrorResponse(
@@ -94,6 +93,7 @@ export class ProductService {
 
     return await this.productRepository.update(id, {
       quantity: updatedQuantity,
+      is_Stock_entry: stock
     });
   }
 

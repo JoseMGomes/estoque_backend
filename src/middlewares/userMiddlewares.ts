@@ -1,7 +1,5 @@
 import { NextFunction, Request, Response } from "express";
-
 import * as jwt from "jsonwebtoken";
-import { JWT_SECRET } from "../secrets";
 import { prismaClient } from "..";
 import { ErrorResponse } from "../exceptions/errorResponse";
 import { ErrorCode } from "../constants/errorCode";
@@ -17,7 +15,7 @@ const authMiddleware = async (
   }
 
   try {
-    const payload = jwt.verify(token, JWT_SECRET) as any;
+    const payload = jwt.verify(token,process.env.JWT_SECRET! ) as any;
     const user = await prismaClient.user.findFirst({
       where: { id: payload.userId },
     });

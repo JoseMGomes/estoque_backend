@@ -1,6 +1,5 @@
 import { compareSync, hashSync } from "bcrypt";
 import * as jwt from "jsonwebtoken";
-import { JWT_SECRET } from "../secrets";
 import { UserRepository } from "../repository/userRepository";
 import { SignupInput, LoginInput, AuthResponse } from "../models/userModels";
 import { ErrorResponse } from "../exceptions/errorResponse";
@@ -44,7 +43,7 @@ export class AuthService {
       throw new ErrorResponse(ErrorMessage.INVALID_CREDENTIALS, ErrorCode.UNAUTHORIZED);
     }
 
-    const token = jwt.sign({ userId: user.id }, JWT_SECRET);
+    const token = jwt.sign({ userId: user.id }, process.env.JWT_SECRET!);
 
     return {
       user: {
@@ -54,5 +53,15 @@ export class AuthService {
       },
       token,
     };
+  }
+
+
+  validateToken(token: string) {
+    try {
+      const decoded = jwt.verify(token, process.env.JWT_SECRET!) as { userId: string };
+      return decoded; 
+    } catch (error) {
+      throw new ErrorResponse(ErrorMessage.INVALID_TOKEN, ErrorCode.UNAUTHORIZED);
+    }
   }
 }
