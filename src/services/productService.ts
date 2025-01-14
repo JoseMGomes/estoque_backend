@@ -2,6 +2,7 @@ import { ProductRepository } from "../repository/productRepository";
 import { ErrorResponse } from "../exceptions/errorResponse";
 import { ErrorCode } from "../constants/errorCode";
 import { ErrorMessageProduct } from "../constants/errorMessage";
+import { ProductData } from "../models/userModels";
 
 export class ProductService {
   private productRepository: ProductRepository;
@@ -10,7 +11,7 @@ export class ProductService {
     this.productRepository = new ProductRepository();
   }
 
-  async createProduct(productData: any) {
+  async createProduct(productData: ProductData) {
     const { name, description, price, quantity, image } = productData;
 
     const imageBuffer: Uint8Array = image

@@ -24,4 +24,14 @@ export interface SignupInput {
     };
     token: string;
   }
+
+
+  export interface ProductData {
+    name: string;
+    description: string;
+    price: number;
+    quantity: number;
+    image?: string; 
+  }
+  
   
