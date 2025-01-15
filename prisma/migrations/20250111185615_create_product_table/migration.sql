@@ -1,18 +1,13 @@
-
-ALTER TABLE [users]
-    ADD CONSTRAINT DF_users_createdAt DEFAULT GETDATE() FOR [createdAt];
-ALTER TABLE [users]
-    ADD CONSTRAINT DF_users_updatedAt DEFAULT GETDATE() FOR [updatedAt];
-
-
-CREATE TABLE [products] (
-    [id] INT IDENTITY(1,1) PRIMARY KEY, 
-    [name] NVARCHAR(191) NOT NULL,
-    [description] NVARCHAR(191) NOT NULL,
-    [price] DECIMAL(65, 30) NOT NULL,
-    [image] NVARCHAR(MAX) NOT NULL,   
-    [createdAt] DATETIME NOT NULL DEFAULT GETDATE(),
-    [updatedAt] DATETIME NOT NULL DEFAULT GETDATE(),
-
-    CONSTRAINT [products_name_key] UNIQUE ([name])
-);
+-- Criação da tabela products
+CREATE TABLE `products` (
+    `id` INTEGER NOT NULL AUTO_INCREMENT,
+    `name` VARCHAR(191) NOT NULL,
+    `description` VARCHAR(191) NOT NULL,
+    `price` DECIMAL(65, 30) NOT NULL,
+    `image` TEXT NOT NULL,
+    `createdAt` DATETIME(3) NOT NULL DEFAULT CURRENT_TIMESTAMP(3),
+    `updatedAt` DATETIME(3) NOT NULL DEFAULT CURRENT_TIMESTAMP(3),
+    `is_Stock_entry` BOOLEAN NOT NULL DEFAULT 1,
+    UNIQUE INDEX `products_name_key` (`name`),
+    PRIMARY KEY (`id`)
+) DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
